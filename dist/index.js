@@ -1,12 +1,10 @@
 import { ImageAnnotatorClient } from '@google-cloud/vision';
-
 const client = new ImageAnnotatorClient();
-
-function detectFace(fileName: string) {
+function detectFace(fileName) {
     console.log(`Running logo detection on ${fileName}`);
     client.logoDetection(fileName)
-    .then(([result]) => {
-        let scores: number[] = [];
+        .then(([result]) => {
+        let scores = [];
         const logos = result.logoAnnotations;
         logos?.forEach((logo) => {
             if (logo.description)
@@ -17,23 +15,22 @@ function detectFace(fileName: string) {
         const avg = scores.reduce((a, b) => a + b) / scores.length;
         console.log(`Average score for ${fileName}: ${avg}`);
     })
-    .catch((err) => {
+        .catch((err) => {
         if (err.code == 'ENOENT')
             console.error(`File ${fileName} not found`);
     });
 }
-
 /**
  * Runs logo detection on the given list of file names and logs the description and average score of each logo.
  * @param fileNames - An array of file names to run logo detection on.
  * @returns void
  */
-function main (fileNames: string[]): void {
-    fileNames.forEach((fileName: string) => {
+function main(fileNames) {
+    fileNames.forEach((fileName) => {
         console.log(`Running logo detection on ${fileName}`);
         client.logoDetection(fileName)
-        .then(([result]) => {
-            let scores: number[] = [];
+            .then(([result]) => {
+            let scores = [];
             const logos = result.logoAnnotations;
             logos?.forEach((logo) => {
                 if (logo.description)
@@ -44,7 +41,7 @@ function main (fileNames: string[]): void {
             const avg = scores.reduce((a, b) => a + b) / scores.length;
             console.log(`Average score for ${fileName}: ${avg}`);
         })
-        .catch((err) => {
+            .catch((err) => {
             if (err.code === 'ENOENT')
                 console.error(`File ${fileName} not found`);
             else if (err.code == 7)
@@ -52,15 +49,14 @@ function main (fileNames: string[]): void {
         });
     });
 }
-
 // Implement the async version of the above here
 // Your version should not use .then and should use try/catch instead of .catch
-async function mainAsync(fileNames: string[]): Promise<void> {
+async function mainAsync(fileNames) {
     for (const fileName of fileNames) {
         try {
             console.log(`Running logo detection on ${fileName}`);
             const [result] = await client.logoDetection(fileName);
-            let scores: number[] = [];
+            let scores = [];
             const logos = result.logoAnnotations;
             logos?.forEach((logo) => {
                 if (logo.description)
@@ -70,7 +66,8 @@ async function mainAsync(fileNames: string[]): Promise<void> {
             });
             const avg = scores.reduce((a, b) => a + b) / scores.length;
             console.log(`Average score for ${fileName}: ${avg}`);
-        } catch (err: any) {
+        }
+        catch (err) {
             if (err.code === 'ENOENT')
                 console.error(`File ${fileName} not found`);
             else if (err.code == 7)
@@ -78,18 +75,16 @@ async function mainAsync(fileNames: string[]): Promise<void> {
         }
     }
 }
-
 main([
-    './images/cmu.jpg', 
-    './images/logo-types-collection.jpg', 
+    './images/cmu.jpg',
+    './images/logo-types-collection.jpg',
     './images/not-a-file.jpg'
 ]);
-
 // Sleep for a second
 await new Promise(r => setTimeout(r, 1000));
-
 mainAsync([
-    './images/cmu.jpg', 
-    './images/logo-types-collection.jpg', 
+    './images/cmu.jpg',
+    './images/logo-types-collection.jpg',
     './images/not-a-file.jpg'
 ]);
+//# sourceMappingURL=index.js.map
